@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "ol": "latest",
+    "ol-marker-feature": "^2.0.3",
     "proj4": "^2.22.0"
   }
 }

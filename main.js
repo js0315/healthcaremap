@@ -18,6 +18,8 @@ import proj4 from 'proj4';
 import {register} from 'ol/proj/proj4.js'
 import { transformExtent } from 'ol/proj'; 
 import {get as getProjection} from 'ol/proj.js';
+import CircleStyle from 'ol/style/Circle.js' // Circle vis
+import Icon from 'ol/style/Icon';
 
 proj4.defs(
   'EPSG:3067',
@@ -26,6 +28,26 @@ proj4.defs(
 
 register(proj4);
 
+// Styles
+const hospitalPointStyle = new Style({
+  image: new CircleStyle({
+    radius: 6,
+    fill: new Fill({color: "red"}),
+    stroke: new Stroke({ color: "gray", width: 3}),
+  })
+})
+
+const hospitalMarkerStyle = new Style({
+  image: new Icon({
+    anchor: [0.5, 0.5],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    src: './data/icon.png',
+    scale: 1.0,
+  })
+})
+
+// Layers:
 const osmLayer = new TileLayer({
   source: new OSM(),
   visible: true,
@@ -36,8 +58,8 @@ const topoLayer = new TileLayer({
     url: 'https://services.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
     attributions:
       "Powered by <a href='https://www.esri.com/en-us/home' target='_blank'>Esri</a>. " + "Source: Esri, DigitalGlobe, GeoEye, Earthstar Geographics, CNES/Airbus DS, USDA, USGS, AeroGRID, IGN, and the GIS User Community",
-    maxZoom: 10,
-    numZoomLevels: 24,
+    //maxZoom: 10,
+    //numZoomLevels: 24,
     sphericalMercator: true
   }),
   visible: false,
@@ -62,6 +84,7 @@ const vectorSource = new VectorSource({
 
 const vectorLayer = new VectorLayer({
   source: vectorSource,
+  style: hospitalMarkerStyle,
 }) 
 
 const map = new Map({
