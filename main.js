@@ -20,6 +20,7 @@ import { transformExtent } from 'ol/proj';
 import {get as getProjection} from 'ol/proj.js';
 import CircleStyle from 'ol/style/Circle.js' // Circle vis
 import Icon from 'ol/style/Icon';
+import Overlay from 'ol/Overlay';
 
 proj4.defs(
   'EPSG:3067',
@@ -37,12 +38,41 @@ const hospitalPointStyle = new Style({
   })
 })
 
+const vectorRiskStyle = function (feature) {
+    const dn = feature.get('DN');
+
+    const colors = {
+        1: '#fff5f0',
+        2: '#fdccb8',
+        3: '#fc8f6f',
+        4: '#f44d38',
+        5: '#c5161c',
+    };
+
+    return new Style({
+        fill: new Fill({
+            color: colors[dn] || 'rgba(128, 128, 128, 0.8)'
+        })
+        // No Stroke: polygons have no borders
+    });
+};
+
 const hospitalMarkerStyle = new Style({
   image: new Icon({
     anchor: [0.5, 0.5],
     anchorXUnits: 'fraction',
     anchorYUnits: 'fraction',
     src: './data/icon.png',
+    scale: 1.0,
+  })
+})
+
+const healthCentreMarkerStyle = new Style({
+  image: new Icon({
+    anchor: [0.5, 0.5],
+    anchorXUnits: 'fraction',
+    anchorYUnits: 'fraction',
+    src: './data/icon2.png',
     scale: 1.0,
   })
 })
@@ -66,6 +96,7 @@ const topoLayer = new TileLayer({
 });
 
 const rasterSource = new GeoTIFF({
+  interpolate: false,
     sources: [
     {
       url: './data/Lampotilan_aiheuttama_riski_hellejaksolla_23052024_01062024_suhteessa_vahintaan_65_vuotiaiden_maaraan.tif',
@@ -74,33 +105,132 @@ const rasterSource = new GeoTIFF({
   })
 
 const rasterLayer = new WebGLTileLayer({
-  source: rasterSource
+  normalize: false,
+  opacity: 1,
+  source: rasterSource,
+  style: {
+    color: [
+
+      'interpolate',
+
+      ['linear'],
+
+      ['band', 1],
+
+      0,     [255, 0, 0],
+
+      1,    [0, 255, 0],
+
+      2,   [0, 0, 255],
+
+      3,   [230, 190, 100],
+
+      4,   [180, 120, 70],
+
+      5,   [150, 110, 100],
+
+
+    ]
+
+    }
 })
 
-const vectorSource = new VectorSource({
+const riskVector = new VectorSource({
+  url: './data/vektoroitu.geojson',
+  format: new GeoJSON(),
+})
+
+const healthCentreSource = new VectorSource({
+  url: './data/healthcare_without_emergency_hospitals.geojson',
+  format: new GeoJSON(),
+})
+
+const healthCentreLayer = new VectorLayer({
+  source: healthCentreSource,
+  style: healthCentreMarkerStyle,
+}) 
+
+const hospitalSource = new VectorSource({
   url: './data/servicepoints_hospitals.geojson',
   format: new GeoJSON(),
 })
 
-const vectorLayer = new VectorLayer({
-  source: vectorSource,
+const hospitalLayer = new VectorLayer({
+  source: hospitalSource,
   style: hospitalMarkerStyle,
 }) 
+
+const riskLayer = new VectorLayer({
+  opacity: 0.8,
+  source: riskVector,
+  style: vectorRiskStyle,
+}) 
+
+const healthFacilityToggle = document.getElementById('healthfacility-toggle');
+healthFacilityToggle.addEventListener('change', () => {
+  healthCentreLayer.setVisible(healthFacilityToggle.checked);
+});
 
 const map = new Map({
   target: 'map',
   layers: [
     osmLayer,
     topoLayer,
-    rasterLayer,
-    vectorLayer,
+    //rasterLayer,
+    riskLayer,
+    healthCentreLayer,
+    hospitalLayer,
   ],
   view: new View({
-    projection: 'EPSG:3857',
-    center: [2500000,8500000],
-    zoom: 10,
+    projection: 'EPSG:3067',
+    center: [239994.720, 6710964.953],
+    zoom: 12,
   })
 });
+
+const popupElement = document.createElement('div');
+popupElement.className = 'ol-popup';
+
+const popup = new Overlay({
+    element: popupElement,
+    positioning: 'bottom-center',
+    stopEvent: true,
+    offset: [0, -10],
+});
+
+map.addOverlay(popup);
+
+map.on('click', (event) => {
+
+    const healthCare = map.getFeaturesAtPixel(event.pixel, {
+        layerFilter: (layer) => layer === hospitalLayer || layer === healthCentreLayer
+    });
+
+    if (healthCare.length > 0) {
+
+        const facility = healthCare[0];
+
+        const facilityName = facility.get('kohteen_ni');
+        const facilityInfo = facility.get('osoite');
+
+        popupElement.replaceChildren();
+
+        const title = document.createElement('b');
+        title.textContent = facilityName || 'Healthcare facility';
+
+        const info = document.createElement('div');
+        info.textContent = facilityInfo || '';
+
+        popupElement.append(title, info);
+
+        // Pass a mutable copy of the coordinate
+        popup.setPosition([...event.coordinate]);
+
+    } else {
+        popup.setPosition(undefined);
+    }
+});
+
 
 // Toggle visibility between OSM and OpenTopoMap
 document.querySelectorAll('input[name="basemap"]')

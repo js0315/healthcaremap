@@ -51,10 +51,25 @@ html, body {
     Legend symbols (match with layer visualisation)
 ---------------------------------------- */
 /* Forest reserve categories */
-.forest-reserve {
-  background: #006b00;
+.heat-risk-1 {
+  background: #fff5f0;
 }
 
+.heat-risk-2 {
+  background: #fdccb8;
+}
+
+.heat-risk-3 {
+  background: #fc8f6f;
+}
+
+.heat-risk-4 {
+  background: #f44d38;
+}
+
+.heat-risk-5 {
+  background: #c5161c;
+}
 .forest-plantation {
   background: #d3f226;
 }
@@ -171,5 +186,6 @@ html, body {
   border: 1px solid #cccccc;
   bottom: 12px;
   left: -50px;
-  min-width: 280px;
+  min-width: 200px;
+  opacity: 0.9;
 }
