@@ -8,6 +8,8 @@
   <body>
     <div id="map" class="map">
 
+      <div id="info"></div>
+
       <!-- Map title -->
        <h1 class="map-title">
         Southwest Finland Healthcare availability regarding heat risks
@@ -32,28 +34,17 @@
           <h2> About this map</h2>
 
           <p>
-            This webmap visualises the distribution of forest reserves, and national and international conservation areas in Tanzania. 
-            International conservation areas consist of UNESCO World Heritage sites, as well as internationally important wetlands (Ramsar Sites).
+            This webmap visualises the heat risk faced by population aged over 65 in Southwest Finland,
+            together with hospitals and health centres. The map is aimed at healthcare actors who are planning
+            healthcare services.
           </p>
 
           <p>
-            <strong>Data layers:</strong>
-            Protected planet.
-          </p>
-
-          <p>
-            <em>
-              UNEP-WCMC (2026). Protected Area Profile for 
-              United Republic of Tanzania from the World Database 
-              on Protected Areas, September 2026. 
-              Available at:
-            </em>
-
-            <a href="https://www.protectedplanet.net"
-              target="_blank"
-              rel="noopener noreferrer">
-              www.protectedplanet.net
-            </a>
+            <strong>Data layers:</strong> <br>
+            Service points (edited to include hospitals and other healthcare facilities, duplicates and some irrelevant facilities removed) <a href="https://avoindata.suomi.fi/data/fi/dataset/varsinais-suomen-ja-satakunnan-palvelupisteet">Lounaistieto</a>. CC BY 4.0. 
+            <br>
+            <br>
+            Heat risk in the Turku region between 23.5.-1.6.2024 for people aged 65 or over​ (edited classes with distance to nearest emergency care offering hospitals) Lounaistieto. Data licence and download site not yet published.
           </p>
 
         </div>
@@ -73,6 +64,31 @@
         <label class="basemap-option">
           <input type="radio" name="basemap" value="topo">
           ESRI Satellite
+        </label>
+
+        <hr>
+
+        <!-- Layer selection -->
+        <p><strong>Heat risk/distance layers</strong></p>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="hello" checked>
+          Combination 1
+        </label>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="topo">
+          Combination 2
+        </label>
+        <br>
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="topo">
+          Combination 3
+        </label>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="topo">
+          Combination 4
         </label>
 
         <hr>

@@ -261,3 +261,45 @@ infoButton.addEventListener("click", () => {
     isExpanded ? "Show map abstract" : "Hide map abstract"
   );
 });
+
+const info = document.getElementById('info');
+
+let currentFeature;
+const displayFeatureInfo = function (pixel, target) {
+  const features = map.getFeaturesAtPixel(pixel, {
+    layerFilter: (layer) => layer === riskLayer
+  });
+
+  const feature = features.length > 0 ? features[0] : undefined;
+
+
+  if (feature) {
+    info.style.left = pixel[0] + 'px';
+    info.style.top = pixel[1] + 'px';
+    if (feature !== currentFeature) {
+      info.style.visibility = 'visible';
+      info.innerText = `Risk class: ${feature.get('DN')}`;
+    }
+  } else {
+    info.style.visibility = 'hidden';
+  }
+  currentFeature = feature;
+};
+
+map.on('pointermove', function (evt) {
+  if (evt.dragging) {
+    info.style.visibility = 'hidden';
+    currentFeature = undefined;
+    return;
+  }
+  displayFeatureInfo(evt.pixel, evt.originalEvent.target);
+});
+
+map.on('click', function (evt) {
+  displayFeatureInfo(evt.pixel, evt.originalEvent.target);
+});
+
+map.getTargetElement().addEventListener('pointerleave', function () {
+  currentFeature = undefined;
+  info.style.visibility = 'hidden';
+});
