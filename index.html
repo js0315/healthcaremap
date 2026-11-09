@@ -72,53 +72,68 @@
         <p><strong>Heat risk/distance layers</strong></p>
 
         <label class="layer-option">
-          <input type="radio" name="risklayer" value="hello" checked>
-          Combination 1
+          <input type="radio" name="risklayer" value="risk0" checked>
+          Original heat risk layer
         </label>
 
-        <label class="layer-option">
-          <input type="radio" name="risklayer" value="topo">
-          Combination 2
-        </label>
         <br>
-        <label class="layer-option">
-          <input type="radio" name="risklayer" value="topo">
-          Combination 3
-        </label>
 
         <label class="layer-option">
-          <input type="radio" name="risklayer" value="topo">
-          Combination 4
+          <input type="radio" name="risklayer" value="risk1">
+          Weighted heat / distance risk layer (75% / 25%) 
+        </label>
+
+        <br>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk2">
+         Weighted heat / distance risk layer (50% / 50%)
+        </label>
+        
+        <br>
+        
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk3">
+          Weighted heat / distance risk layer (25% / 75%)
+        </label>
+
+        <br>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk4">
+          Weighted heat / distance risk layer (20% / 80%)
         </label>
 
         <hr>
 
         <!-- Heat risk layer legend -->
-        <p><strong>Heat risk</strong></p>
 
-        <div class="legend-item">
-          <span class="legend-swatch heat-risk-1"></span>
-          Very small risk
-        </div>
+        <div id="heatRiskLegend">
+          <p><strong>Heat risk (class)</strong></p>
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-1"></span>
+            Very low risk (1)
+          </div>
 
-        <div class="legend-item">
-          <span class="legend-swatch heat-risk-2"></span>
-          Small risk
-        </div>
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-2"></span>
+            Low risk (2)
+          </div>
 
-        <div class="legend-item">
-          <span class="legend-swatch heat-risk-3"></span>
-          Intermediate risk
-        </div>
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-3"></span>
+            Moderate risk (3)
+          </div>
 
-        <div class="legend-item">
-          <span class="legend-swatch heat-risk-4"></span>
-          High risk
-        </div>
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-4"></span>
+            High risk (4)
+          </div>
 
-        <div class="legend-item">
-          <span class="legend-swatch heat-risk-5"></span>
-          Very high risk
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-5"></span>
+            Very high risk (5)
+          </div>
         </div>
 
         <p><strong>Hospitals</strong></p>
@@ -131,7 +146,7 @@
 
         <div class="legend-item">
           <img src="./data/icon2.png">
-          Other health centres and hospitals <input type="checkbox" id="healthfacility-toggle" checked>
+          Other health centres and hospitals <input type="checkbox" id="healthfacility-toggle">
         </div>
       </div>
 

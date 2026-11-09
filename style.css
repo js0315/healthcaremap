@@ -51,7 +51,7 @@ html, body {
 /* ----------------------------------------
     Legend symbols (match with layer visualisation)
 ---------------------------------------- */
-/* Forest reserve categories */
+/* Heat  risk legend colours */
 .heat-risk-1 {
   background: #fff5f0;
 }
@@ -71,39 +71,23 @@ html, body {
 .heat-risk-5 {
   background: #c5161c;
 }
-.forest-plantation {
-  background: #d3f226;
+
+/* Weighted risk legend colours */
+
+.weighted-risk-1 {
+  background: #fdccb8;
 }
 
-.nature-reserve {
-  background: #81bf00;
+.weighted-risk-2 {
+  background: #fc8f6f;
 }
 
-.village-reserve {
-  background: #56cf68;
-}
-/* National parks layer */
-.national-park {
-  background: repeating-linear-gradient(
-    45deg,
-    #000000,
-    #000000 1px,
-    transparent 1px,
-    transparent 7px
-  );
-  border: 1px solid #000000;
+.weighted-risk-3 {
+  background: #c5161c;
 }
 
-/* International conservation areas layer */
-.international-area {
-  background: repeating-linear-gradient(
-    135deg,
-    #000000,
-    #000000 1px,
-    transparent 1px,
-    transparent 7px
-  );
-  border: 1px solid #000000;
+.weighted-risk-4 {
+  background: #67000d;
 }
 
 /* ----------------------------------------

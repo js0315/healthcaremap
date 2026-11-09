@@ -22,6 +22,10 @@ import CircleStyle from 'ol/style/Circle.js' // Circle vis
 import Icon from 'ol/style/Icon';
 import Overlay from 'ol/Overlay';
 
+import Cluster from 'ol/source/Cluster.js';
+import Text from 'ol/style/Text.js';
+
+
 proj4.defs(
   'EPSG:3067',
   '+proj=utm +zone=35 +ellps=GRS80 +units=m +no_defs +type=crs'
@@ -42,11 +46,49 @@ const vectorRiskStyle = function (feature) {
     const dn = feature.get('DN');
 
     const colors = {
-        1: '#fff5f0',
-        2: '#fdccb8',
-        3: '#fc8f6f',
-        4: '#f44d38',
-        5: '#c5161c',
+        1: '#f1eef6',
+        2: '#dcc0de',
+        3: '#dc85c0',
+        4: '#de4899',
+        5: '#cf166d',
+        6: '#980043',
+    };
+
+    return new Style({
+        fill: new Fill({
+            color: colors[dn] || 'rgba(128, 128, 128, 0.8)'
+        })
+        // No Stroke: polygons have no borders
+    });
+};
+
+const vectorRiskStyle2 = function (feature) {
+    let dn = feature.get('DN');
+
+    if (dn <= 2) {
+      dn = 1
+    }
+
+    else if (dn > 2 && dn <= 3) {
+      dn = 2
+    }
+
+    else if (dn > 3 && dn <= 4) {
+      dn = 3
+    }
+
+    else if (dn > 4) {
+      dn = 4
+    }
+
+    //else if (dn > 4 && dn <= 5) {
+    //  dn = 5
+    //}
+    const colors = {
+        1: '#fdccb8',
+        2: '#fc8f6f',
+        3: '#c5161c',
+        4: '#67000d',
     };
 
     return new Style({
@@ -95,48 +137,28 @@ const topoLayer = new TileLayer({
   visible: false,
 });
 
-const rasterSource = new GeoTIFF({
-  interpolate: false,
-    sources: [
-    {
-      url: './data/Lampotilan_aiheuttama_riski_hellejaksolla_23052024_01062024_suhteessa_vahintaan_65_vuotiaiden_maaraan.tif',
-    },
-    ]
-  })
-
-const rasterLayer = new WebGLTileLayer({
-  normalize: false,
-  opacity: 1,
-  source: rasterSource,
-  style: {
-    color: [
-
-      'interpolate',
-
-      ['linear'],
-
-      ['band', 1],
-
-      0,     [255, 0, 0],
-
-      1,    [0, 255, 0],
-
-      2,   [0, 0, 255],
-
-      3,   [230, 190, 100],
-
-      4,   [180, 120, 70],
-
-      5,   [150, 110, 100],
-
-
-    ]
-
-    }
-})
-
 const riskVector = new VectorSource({
   url: './data/vektoroitu.geojson',
+  format: new GeoJSON(),
+})
+
+const riskVector1 = new VectorSource({
+  url: './data/d_weighting_risk75_dist25.geojson',
+  format: new GeoJSON(),
+})
+
+const riskVector2 = new VectorSource({
+  url: './data/d_weighting_risk50_dist50.geojson',
+  format: new GeoJSON(),
+})
+
+const riskVector3 = new VectorSource({
+  url: './data/d_weighting_risk25_dist75.geojson',
+  format: new GeoJSON(),
+})
+
+const riskVector4 = new VectorSource({
+  url: './data/d_weighting_risk20_dist80.geojson',
   format: new GeoJSON(),
 })
 
@@ -145,10 +167,47 @@ const healthCentreSource = new VectorSource({
   format: new GeoJSON(),
 })
 
+const healtCentreCluster = new Cluster({
+  distance: 20,
+  source: healthCentreSource
+})
+
 const healthCentreLayer = new VectorLayer({
-  source: healthCentreSource,
-  style: healthCentreMarkerStyle,
-}) 
+  visible: false,
+  source: healtCentreCluster,
+  style: (feature) => {
+    const features = feature.get('features').length;
+
+    if (features == 1) {
+      return new Style({
+      image: new Icon({
+        anchor: [0.5, 0.5],
+        anchorXUnits: 'fraction',
+        anchorYUnits: 'fraction',
+        src: './data/icon2.png',
+        scale: 1.0
+        })
+      },
+    )
+    } else {
+      return new Style ({
+        image: new CircleStyle({
+          radius: 15,
+          fill: new Fill({
+            color: '#550DFF'
+          }),
+          opacity: 0.9,
+        }),
+        text: new Text({
+          text: features.toString(),
+          fill: new Fill({
+            color: '#ffff'
+          })
+        })
+      })
+    }
+  }
+})
 
 const hospitalSource = new VectorSource({
   url: './data/servicepoints_hospitals.geojson',
@@ -166,6 +225,37 @@ const riskLayer = new VectorLayer({
   style: vectorRiskStyle,
 }) 
 
+const riskLayer1 = new VectorLayer({
+  visible: false,
+  opacity: 0.8,
+  source: riskVector1,
+  style: vectorRiskStyle2,
+}) 
+
+
+const riskLayer2 = new VectorLayer({
+    visible: false,
+  opacity: 0.8,
+  source: riskVector2,
+  style: vectorRiskStyle2,
+}) 
+
+
+const riskLayer3 = new VectorLayer({
+  visible: false,
+  opacity: 0.8,
+  source: riskVector3,
+  style: vectorRiskStyle2,
+}) 
+
+
+const riskLayer4 = new VectorLayer({
+  visible: false,
+  opacity: 0.8,
+  source: riskVector4,
+  style: vectorRiskStyle2,
+}) 
+
 const healthFacilityToggle = document.getElementById('healthfacility-toggle');
 healthFacilityToggle.addEventListener('change', () => {
   healthCentreLayer.setVisible(healthFacilityToggle.checked);
@@ -176,8 +266,11 @@ const map = new Map({
   layers: [
     osmLayer,
     topoLayer,
-    //rasterLayer,
     riskLayer,
+    riskLayer1,
+    riskLayer2,
+    riskLayer3,
+    riskLayer4,
     healthCentreLayer,
     hospitalLayer,
   ],
@@ -208,7 +301,13 @@ map.on('click', (event) => {
 
     if (healthCare.length > 0) {
 
-        const facility = healthCare[0];
+        let facility = healthCare[0];
+
+        const clustered = facility.get('features');
+
+        if (clustered) {
+          facility = clustered[0];
+        }
 
         const facilityName = facility.get('kohteen_ni');
         const facilityInfo = facility.get('osoite');
@@ -241,6 +340,78 @@ document.querySelectorAll('input[name="basemap"]')
     });
   });
 
+// Toggle visibility between OSM and OpenTopoMap
+document.querySelectorAll('input[name="risklayer"]')
+  .forEach((radio) => {
+    radio.addEventListener('change', () => {
+      riskLayer1.setVisible(radio.value === 'risk1');
+      riskLayer2.setVisible(radio.value === 'risk2');
+      riskLayer3.setVisible(radio.value === 'risk3');
+      riskLayer4.setVisible(radio.value === 'risk4');
+      riskLayer.setVisible(radio.value === 'risk0');
+
+      const hrLegend = document.getElementById("heatRiskLegend")
+
+      if (event.target.value === 'risk0') {
+        hrLegend.innerHTML = (
+          `
+          <p><strong>Heat risk (class)</strong></p>
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-1"></span>
+            Very low risk (1)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-2"></span>
+            Low risk (2)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-3"></span>
+            Moderate risk (3)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-4"></span>
+            High risk (4)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-5"></span>
+            Very high risk (5)
+          </div>
+          `
+        )
+      } else {
+        hrLegend.innerHTML = (
+          `
+          <p><strong>Weighted heat/distance risk (risk value)</strong></p>
+          <div class="legend-item">
+            <span class="legend-swatch weighted-risk-1"></span>
+            Low risk (<2)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch weighted-risk-2"></span>
+            Moderate risk (2,1-3)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch weighted-risk-3"></span>
+            High risk (3,1-4)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch weighted-risk-4"></span>
+            Very high risk (>4)
+          </div>
+          `
+        )
+      }
+
+    });
+  });
+
 // Show or hide the map information panel (abstract)
 const infoButton = document.getElementById("info-button");
 const abstractPanel = document.getElementById("abstract-panel");
@@ -267,7 +438,9 @@ const info = document.getElementById('info');
 let currentFeature;
 const displayFeatureInfo = function (pixel, target) {
   const features = map.getFeaturesAtPixel(pixel, {
-    layerFilter: (layer) => layer === riskLayer
+    layerFilter: (layer) => (
+      layer === riskLayer || layer === riskLayer1 || layer === riskLayer2 || layer === riskLayer3 || layer === riskLayer4   
+    )
   });
 
   const feature = features.length > 0 ? features[0] : undefined;
@@ -278,8 +451,15 @@ const displayFeatureInfo = function (pixel, target) {
     info.style.top = pixel[1] + 'px';
     if (feature !== currentFeature) {
       info.style.visibility = 'visible';
-      info.innerText = `Risk class: ${feature.get('DN')}`;
+      let value = feature.get('DN');
+      if (!riskLayer.getVisible()) {
+        value = value.toFixed(1);
+        info.innerText = `Risk value: ${(value)}`;
+      } else{
+        info.innerText = `Risk class: ${(value)}`;
+      }
     }
+    
   } else {
     info.style.visibility = 'hidden';
   }
