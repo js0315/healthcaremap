@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Heat risk, distance weighted heat risk for 65+ and emergency care in SW Finland</title>
+    <script type="module" crossorigin src="./assets/index-DKotQ7cq.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-ChFSgV5k.css">
+  </head>
+  <body>
+    <div id="map" class="map">
+
+      <div id="info"></div>
+
+      <!-- Map title -->
+       <h1 class="map-title">
+        Heat risk and distance weighted heat risk for population over 65 in SW Finland
+       </h1>
+
+             <!-- Abstract toggle via info-button -->
+      <div class="map-info">
+
+        <button
+          id="info-button"
+          class="info-button"
+          type="button"
+          aria-label="Show map abstract"
+          aria-expanded="false"
+          aria-controls="abstract-panel">
+          i
+        </button>
+
+        <!-- Abstract panel that appears when toggled -->
+        <div id="abstract-panel" class="abstract-panel" hidden>
+          
+          <h2> About this map</h2>
+
+          <p>
+            This webmap visualises the heat risk faced by population aged over 65 in Southwest Finland, 
+            and reclassified weighted risk layers calculated based on distanes to the nearest hospitals
+            offering emergency services. 
+            Hospitals and health centres are also visualised on the map. The map is aimed at healthcare actors who are planning
+            healthcare services.
+          </p>
+
+          <p>
+            <strong>Distance classes:</strong> <br>
+            These distance classes were used for calculating the weighted heat risk layers:
+            <br>
+            ≤ 5 000 m <br>
+            5 000,1-15 000 m <br>
+            15 000,1-30 000 m<br>
+            30 000,1-50 000 m<br> 
+            > 50 000 m<br> 
+            </p>
+
+          <p>
+            <strong>Data sources:</strong> <br>
+            Service points (edited to include hospitals and other healthcare facilities, duplicates and some irrelevant facilities removed) <a href="https://avoindata.suomi.fi/data/fi/dataset/varsinais-suomen-ja-satakunnan-palvelupisteet">Lounaistieto</a>. CC BY 4.0. 
+            <br>
+            <br>
+            Heat risk in the Turku region between 23.5.-1.6.2024 for people aged 65 or over​ (edited classes with distance to nearest emergency care offering hospitals) Lounaistieto. Data licence and download site not yet published.
+          </p>
+
+        </div>
+      </div>
+
+      <!-- Map legend -->
+      <div id="legend">
+
+        <!-- Basemap selection -->
+        <p><strong>Basemap</strong></p>
+
+        <label class="basemap-option">
+          <input type="radio" name="basemap" value="osm" checked>
+          OpenStreetMap
+        </label>
+
+        <label class="basemap-option">
+          <input type="radio" name="basemap" value="topo">
+          ESRI Satellite
+        </label>
+
+        <hr>
+
+        <!-- Layer selection -->
+        <p><strong>Heat risk and weighted heat risk layers</strong></p>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk0" checked>
+          Original heat risk
+        </label>
+
+        <br>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk1">
+          Weighted heat / distance risk (75% / 25%) 
+        </label>
+
+        <br>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk2">
+         Weighted heat / distance risk (50% / 50%)
+        </label>
+        
+        <br>
+        
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk3">
+          Weighted heat / distance risk (25% / 75%)
+        </label>
+
+        <br>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="risk4">
+          Weighted heat / distance risk (20% / 80%)
+        </label>
+
+        <hr>
+
+        <!-- Heat risk layer legend -->
+
+        <div id="heatRiskLegend">
+          <p><strong>Heat risk (class)</strong></p>
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-1"></span>
+            Very low risk (1)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-2"></span>
+            Low risk (2)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-3"></span>
+            Moderate risk (3)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-4"></span>
+            High risk (4)
+          </div>
+
+          <div class="legend-item">
+            <span class="legend-swatch heat-risk-5"></span>
+            Very high risk (5)
+          </div>
+        </div>
+
+        <p><strong>Hospitals and other healthcare facilities</strong></p>
+
+        <!-- Hospital layer legend -->
+        <div class="legend-item">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAABIUExURf9ubv87O/8WFv8GBv86Ov99ff8TE/8AAP8cHP8XF/9nZ/8ZGf9SUv8ODv////8QEP8JCf8KCv8aGv8bG/9sbP84OP9rawAAALMWNa4AAAAYdFJOU///////////////////////////////AM0TLuoAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTITAUd0AAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAAGAAAAABAAAAYAAAAAEAAABQYWludC5ORVQgNS4xLjEyAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAADZp5qVybcLXwAAAMNJREFUOE+Fk9sSgyAMRCOIi9TWasX8/592AC0Xp2afIGeSIWFDnEWd0lr1VIbOgxnw02BarAA7JjhaQFXYAY+cHC8u4wn6GaKvqHCaNaYTO7xTUsbAEvMDhj5qlhgaCSvEyi2ew/uITX5VhbHCMHHRb42BgYlh/+EPmAjHNK54xEbdL9wKgCd1hxWFnluQFHqXsFC8v8P+vrH9biwW8lCFLxE+VLIDOyxXnM0kWDEaeT1qRq2VkaU1EJcoaPNhBf1ehL5Anirda7WP3wAAAABJRU5ErkJggg==">
+          Hospitals with emergency services
+        </div>
+
+        <div class="legend-item">
+          <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAMAAAAM7l6QAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJUExURVUN/////wAAAEIw2KkAAAADdFJOU///ANfKDUEAAAAJcEhZcwAADsEAAA7BAbiRa+0AAAAZdEVYdFNvZnR3YXJlAFBhaW50Lk5FVCA1LjEuMTITAUd0AAAAuGVYSWZJSSoACAAAAAUAGgEFAAEAAABKAAAAGwEFAAEAAABSAAAAKAEDAAEAAAACAAAAMQECABEAAABaAAAAaYcEAAEAAABsAAAAAAAAANl2AQDoAwAA2XYBAOgDAABQYWludC5ORVQgNS4xLjEyAAADAACQBwAEAAAAMDIzMAGgAwABAAAAAQAAAAWgBAABAAAAlgAAAAAAAAACAAEAAgAEAAAAUjk4AAIABwAEAAAAMDEwMAAAAACGuzBWtNQBsAAAAGZJREFUOE/V0sEOgCAMA9Dp/3+0GbLRVpIeONmDYN9MjBL3SsxgpcYTtWFtf1fFzOJqrhH0vPQDzIMs961yGr6Wcpwy5sNYa/7APEaV+SyHbH6oOw6OzVF0B3kzUPVcxbutDUxA9QA+cgJVdr5hhAAAAABJRU5ErkJggg==">
+          Other hospitals health centres <input type="checkbox" id="healthfacility-toggle">
+        </div>
+      </div>
+
+    </div>
+
+  </body>
+</html>
