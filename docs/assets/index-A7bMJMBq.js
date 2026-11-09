@@ -37,7 +37,7 @@ northing meters`+e;var f=d/2,p=0,m=0,h,g,_,v,y;return f>0&&(h=1e5/10**f,g=e.subs
           <p><strong>Weighted heat/distance risk (risk value)</strong></p>
           <div class="legend-item">
             <span class="legend-swatch weighted-risk-1"></span>
-            Low risk (<2)
+            Low risk (≤2)
           </div>
 
           <div class="legend-item">

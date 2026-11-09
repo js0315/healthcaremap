@@ -389,7 +389,7 @@ document.querySelectorAll('input[name="risklayer"]')
           <p><strong>Weighted heat/distance risk (risk value)</strong></p>
           <div class="legend-item">
             <span class="legend-swatch weighted-risk-1"></span>
-            Low risk (<2)
+            Low risk (≤2)
           </div>
 
           <div class="legend-item">
