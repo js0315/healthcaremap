@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Southwest Finland Healthcare availability regarding heat risks</title>
+    <title>Heat risk, distance weighted heat risk for 65+ and emergency care in SW Finland</title>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
@@ -12,7 +12,7 @@
 
       <!-- Map title -->
        <h1 class="map-title">
-        Southwest Finland Healthcare availability regarding heat risks
+        Heat risk and distance weighted heat risk for population over 65 in SW Finland
        </h1>
 
              <!-- Abstract toggle via info-button -->
@@ -34,13 +34,26 @@
           <h2> About this map</h2>
 
           <p>
-            This webmap visualises the heat risk faced by population aged over 65 in Southwest Finland,
-            together with hospitals and health centres. The map is aimed at healthcare actors who are planning
+            This webmap visualises the heat risk faced by population aged over 65 in Southwest Finland, 
+            and reclassified weighted risk layers calculated based on distanes to the nearest hospitals
+            offering emergency services. 
+            Hospitals and health centres are also visualised on the map. The map is aimed at healthcare actors who are planning
             healthcare services.
           </p>
 
           <p>
-            <strong>Data layers:</strong> <br>
+            <strong>Distance classes:</strong> <br>
+            These distance classes were used for calculating the weighted heat risk layers:
+            <br>
+            ≤ 5 000 m <br>
+            5 000,1-15 000 m <br>
+            15 000,1-30 000 m<br>
+            30 000,1-50 000 m<br> 
+            > 50 000 m<br> 
+            </p>
+
+          <p>
+            <strong>Data sources:</strong> <br>
             Service points (edited to include hospitals and other healthcare facilities, duplicates and some irrelevant facilities removed) <a href="https://avoindata.suomi.fi/data/fi/dataset/varsinais-suomen-ja-satakunnan-palvelupisteet">Lounaistieto</a>. CC BY 4.0. 
             <br>
             <br>
@@ -69,39 +82,39 @@
         <hr>
 
         <!-- Layer selection -->
-        <p><strong>Heat risk/distance layers</strong></p>
+        <p><strong>Heat risk and weighted heat risk layers</strong></p>
 
         <label class="layer-option">
           <input type="radio" name="risklayer" value="risk0" checked>
-          Original heat risk layer
+          Original heat risk
         </label>
 
         <br>
 
         <label class="layer-option">
           <input type="radio" name="risklayer" value="risk1">
-          Weighted heat / distance risk layer (75% / 25%) 
+          Weighted heat / distance risk (75% / 25%) 
         </label>
 
         <br>
 
         <label class="layer-option">
           <input type="radio" name="risklayer" value="risk2">
-         Weighted heat / distance risk layer (50% / 50%)
+         Weighted heat / distance risk (50% / 50%)
         </label>
         
         <br>
         
         <label class="layer-option">
           <input type="radio" name="risklayer" value="risk3">
-          Weighted heat / distance risk layer (25% / 75%)
+          Weighted heat / distance risk (25% / 75%)
         </label>
 
         <br>
 
         <label class="layer-option">
           <input type="radio" name="risklayer" value="risk4">
-          Weighted heat / distance risk layer (20% / 80%)
+          Weighted heat / distance risk (20% / 80%)
         </label>
 
         <hr>
@@ -136,7 +149,7 @@
           </div>
         </div>
 
-        <p><strong>Hospitals</strong></p>
+        <p><strong>Hospitals and other healthcare facilities</strong></p>
 
         <!-- Hospital layer legend -->
         <div class="legend-item">
@@ -146,7 +159,7 @@
 
         <div class="legend-item">
           <img src="./data/icon2.png">
-          Other health centres and hospitals <input type="checkbox" id="healthfacility-toggle">
+          Other hospitals health centres <input type="checkbox" id="healthfacility-toggle">
         </div>
       </div>
 

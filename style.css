@@ -53,23 +53,23 @@ html, body {
 ---------------------------------------- */
 /* Heat  risk legend colours */
 .heat-risk-1 {
-  background: #fff5f0;
+  background: #f1eef6;
 }
 
 .heat-risk-2 {
-  background: #fdccb8;
+  background: #dcc0de;
 }
 
 .heat-risk-3 {
-  background: #fc8f6f;
+  background: #dc85c0;
 }
 
 .heat-risk-4 {
-  background: #f44d38;
+  background: #de4899;
 }
 
 .heat-risk-5 {
-  background: #c5161c;
+  background: #cf166d;
 }
 
 /* Weighted risk legend colours */

@@ -51,14 +51,13 @@ const vectorRiskStyle = function (feature) {
         3: '#dc85c0',
         4: '#de4899',
         5: '#cf166d',
-        6: '#980043',
     };
 
     return new Style({
         fill: new Fill({
-            color: colors[dn] || 'rgba(128, 128, 128, 0.8)'
+            color: colors[dn] || 'rgba(128, 128, 128, 0.8)',
+            stroke: colors[dn] || 'rgba(128, 128, 128, 0.8)',
         })
-        // No Stroke: polygons have no borders
     });
 };
 
@@ -93,9 +92,9 @@ const vectorRiskStyle2 = function (feature) {
 
     return new Style({
         fill: new Fill({
-            color: colors[dn] || 'rgba(128, 128, 128, 0.8)'
+            color: colors[dn] || 'rgba(128, 128, 128, 0.8)',
+            stroke: colors[dn] || 'rgba(128, 128, 128, 0.8)',
         })
-        // No Stroke: polygons have no borders
     });
 };
 
@@ -223,6 +222,7 @@ const riskLayer = new VectorLayer({
   opacity: 0.8,
   source: riskVector,
   style: vectorRiskStyle,
+  stroke: vectorRiskStyle,
 }) 
 
 const riskLayer1 = new VectorLayer({
@@ -230,6 +230,7 @@ const riskLayer1 = new VectorLayer({
   opacity: 0.8,
   source: riskVector1,
   style: vectorRiskStyle2,
+  stroke: vectorRiskStyle2,
 }) 
 
 
