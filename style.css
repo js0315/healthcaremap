@@ -161,6 +161,10 @@ html, body {
   margin: 0 0 12px;
 }
 
+/* ----------------------------------------
+    Styling for the popups
+---------------------------------------- */
+
 .ol-popup {
   position: absolute;
   background-color: white;
@@ -168,7 +172,7 @@ html, body {
   filter: drop-shadow(0 1px 4px rgba(0,0,0,0.2));
   padding: 15px;
   border-radius: 10px;
-  border: 1px solid #cccccc;
+  border: 1px solid #ccc;
   bottom: 12px;
   left: -50px;
   min-width: 200px;

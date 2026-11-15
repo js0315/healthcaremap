@@ -1,8 +1,6 @@
 import Map from 'ol/Map.js';
 import View from 'ol/View.js';
-import ImageLayer from 'ol/layer/Image.js';
 import TileLayer from 'ol/layer/Tile.js';
-import ImageWMS from 'ol/source/ImageWMS.js';
 import OSM from 'ol/source/OSM.js';
 import VectorSource from 'ol/source/Vector.js';
 import GeoJSON from 'ol/format/GeoJSON.js';
@@ -11,21 +9,15 @@ import Style from 'ol/style/Style';
 import Fill from 'ol/style/Fill';
 import Stroke from 'ol/style/Stroke';
 import XYZ from 'ol/source/XYZ.js';
-import Tile from 'ol/Tile';
-import WebGLTileLayer from 'ol/layer/WebGLTile.js';
-import GeoTIFF from 'ol/source/GeoTIFF.js';
 import proj4 from 'proj4';
 import {register} from 'ol/proj/proj4.js'
-import { transformExtent } from 'ol/proj'; 
-import {get as getProjection} from 'ol/proj.js';
-import CircleStyle from 'ol/style/Circle.js' // Circle vis
+import CircleStyle from 'ol/style/Circle.js'
 import Icon from 'ol/style/Icon';
 import Overlay from 'ol/Overlay';
-
 import Cluster from 'ol/source/Cluster.js';
 import Text from 'ol/style/Text.js';
 
-
+// Proj4 is used for reprojecting layers into EPSG:3067 
 proj4.defs(
   'EPSG:3067',
   '+proj=utm +zone=35 +ellps=GRS80 +units=m +no_defs +type=crs'
@@ -33,7 +25,7 @@ proj4.defs(
 
 register(proj4);
 
-// Styles
+// Styles for the map layers
 const hospitalPointStyle = new Style({
   image: new CircleStyle({
     radius: 6,
@@ -118,7 +110,7 @@ const healthCentreMarkerStyle = new Style({
   })
 })
 
-// Layers:
+// Layers are defined here:
 const osmLayer = new TileLayer({
   source: new OSM(),
   visible: true,
@@ -161,11 +153,13 @@ const riskVector4 = new VectorSource({
   format: new GeoJSON(),
 })
 
+// Source for healt centres and hospitals without emergency care
 const healthCentreSource = new VectorSource({
   url: './data/healthcare_without_emergency_hospitals.geojson',
   format: new GeoJSON(),
 })
 
+// Cluster and layer for non-emergency health services
 const healtCentreCluster = new Cluster({
   distance: 20,
   source: healthCentreSource
@@ -208,16 +202,19 @@ const healthCentreLayer = new VectorLayer({
   }
 })
 
+// Data source for hospitals with emergency care
 const hospitalSource = new VectorSource({
   url: './data/servicepoints_hospitals.geojson',
   format: new GeoJSON(),
 })
 
+// Layer for hospitals with emergency care
 const hospitalLayer = new VectorLayer({
   source: hospitalSource,
   style: hospitalMarkerStyle,
 }) 
 
+// Original heatrisk layer
 const riskLayer = new VectorLayer({
   opacity: 0.8,
   source: riskVector,
@@ -225,6 +222,12 @@ const riskLayer = new VectorLayer({
   stroke: vectorRiskStyle,
 }) 
 
+// Empty layer, for hidin the risks on the map
+const noLayer = new VectorLayer({
+
+}) 
+
+// Weighted risk layers
 const riskLayer1 = new VectorLayer({
   visible: false,
   opacity: 0.8,
@@ -233,14 +236,12 @@ const riskLayer1 = new VectorLayer({
   stroke: vectorRiskStyle2,
 }) 
 
-
 const riskLayer2 = new VectorLayer({
     visible: false,
   opacity: 0.8,
   source: riskVector2,
   style: vectorRiskStyle2,
 }) 
-
 
 const riskLayer3 = new VectorLayer({
   visible: false,
@@ -249,7 +250,6 @@ const riskLayer3 = new VectorLayer({
   style: vectorRiskStyle2,
 }) 
 
-
 const riskLayer4 = new VectorLayer({
   visible: false,
   opacity: 0.8,
@@ -257,11 +257,13 @@ const riskLayer4 = new VectorLayer({
   style: vectorRiskStyle2,
 }) 
 
+// Toggle event listender for showing/hiding the non-emergency health services
 const healthFacilityToggle = document.getElementById('healthfacility-toggle');
 healthFacilityToggle.addEventListener('change', () => {
   healthCentreLayer.setVisible(healthFacilityToggle.checked);
 });
 
+// Map and its layers are defined here
 const map = new Map({
   target: 'map',
   layers: [
@@ -282,6 +284,7 @@ const map = new Map({
   })
 });
 
+// Popups are defined here
 const popupElement = document.createElement('div');
 popupElement.className = 'ol-popup';
 
@@ -294,6 +297,7 @@ const popup = new Overlay({
 
 map.addOverlay(popup);
 
+// Click event for the popups
 map.on('click', (event) => {
 
     const healthCare = map.getFeaturesAtPixel(event.pixel, {
@@ -350,9 +354,11 @@ document.querySelectorAll('input[name="risklayer"]')
       riskLayer3.setVisible(radio.value === 'risk3');
       riskLayer4.setVisible(radio.value === 'risk4');
       riskLayer.setVisible(radio.value === 'risk0');
+      noLayer.setVisible(radio.value === 'norisk');
 
       const hrLegend = document.getElementById("heatRiskLegend")
 
+      // Legend content for risk0 / original heat risk
       if (event.target.value === 'risk0') {
         hrLegend.innerHTML = (
           `
@@ -383,7 +389,18 @@ document.querySelectorAll('input[name="risklayer"]')
           </div>
           `
         )
-      } else {
+      } 
+      
+      // Legend content (empty) for when the risk layers are hidden
+      else if (event.target.value === 'norisk') {
+        hrLegend.innerHTML = (
+          `
+          `
+        )
+      } 
+      
+      // Legend content for the weighted risk layers
+      else {
         hrLegend.innerHTML = (
           `
           <p><strong>Weighted heat/distance risk (risk value)</strong></p>
@@ -394,12 +411,12 @@ document.querySelectorAll('input[name="risklayer"]')
 
           <div class="legend-item">
             <span class="legend-swatch weighted-risk-2"></span>
-            Moderate risk (2,1-3)
+            Moderate risk (2,1 - 3)
           </div>
 
           <div class="legend-item">
             <span class="legend-swatch weighted-risk-3"></span>
-            High risk (3,1-4)
+            High risk (3,1 - 4)
           </div>
 
           <div class="legend-item">
@@ -434,19 +451,21 @@ infoButton.addEventListener("click", () => {
   );
 });
 
+// Mouse hover information, risk value/class
 const info = document.getElementById('info');
 
 let currentFeature;
 const displayFeatureInfo = function (pixel, target) {
   const features = map.getFeaturesAtPixel(pixel, {
-    layerFilter: (layer) => (
+    layerFilter: (layer) => ( // Checking if a layer is active, should a value be shown
       layer === riskLayer || layer === riskLayer1 || layer === riskLayer2 || layer === riskLayer3 || layer === riskLayer4   
     )
   });
 
+  // Checking if there is a value in the current mouse position
   const feature = features.length > 0 ? features[0] : undefined;
 
-
+  // If value exists and layer is active --> Value is shown
   if (feature) {
     info.style.left = pixel[0] + 'px';
     info.style.top = pixel[1] + 'px';
@@ -467,6 +486,7 @@ const displayFeatureInfo = function (pixel, target) {
   currentFeature = feature;
 };
 
+// Pointermove event, basically tracks the mouse movement
 map.on('pointermove', function (evt) {
   if (evt.dragging) {
     info.style.visibility = 'hidden';

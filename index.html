@@ -45,11 +45,11 @@
             <strong>Distance classes:</strong> <br>
             These distance classes were used for calculating the weighted heat risk layers:
             <br>
-            ≤ 5 000 m <br>
-            5 000,1-15 000 m <br>
-            15 000,1-30 000 m<br>
-            30 000,1-50 000 m<br> 
-            > 50 000 m<br> 
+            ≤ 5 km <br>
+            5,1 - 15 km <br>
+            15,1 - 30 km<br>
+            30,1 - 50 km<br> 
+            > 50 km<br> 
             </p>
 
           <p>
@@ -83,6 +83,13 @@
 
         <!-- Layer selection -->
         <p><strong>Heat risk and weighted heat risk layers</strong></p>
+
+        <label class="layer-option">
+          <input type="radio" name="risklayer" value="norisk">
+          Hide risk layers
+        </label>
+
+        <br>
 
         <label class="layer-option">
           <input type="radio" name="risklayer" value="risk0" checked>
